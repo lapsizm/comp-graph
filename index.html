@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<canvas id="circle" width=1920 height=1920></canvas>
+<script>
+    var position = 0;
+    function draw3() {
+        var canvas = document.getElementById("circle"); //Новый элемент холста
+        var context = canvas.getContext("2d");  //Получить 2D контекст
+
+        context = canvas.getContext("2d");          //Получить его контекст
+        context.fillStyle = "#f00";                 //Цвет заливки красный
+        context.beginPath();                        //Начать рисование
+        //Добавить в рисунок окружность с радиусом 20
+        //и с центром в точке (30,30)
+        context.arc(position, 50, 20, 0, 2 * Math.PI, false);
+        context.fill();                            //Залить фигуру
+        position+=9;
+    }
+    setInterval(draw3, 100);
+</script>
+</body>
+</html>
