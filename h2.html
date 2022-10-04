@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<canvas id="h2" width='1000' height='1000'></canvas>
+<script>
+    var canvas = document.getElementById("h2");
+    var ctx = canvas.getContext("2d");  //получаем контекст
+
+    var img = new Image;  //создаем новый IMG экземляр
+    img.src = "https://raw.githubusercontent.com/zeke/github-avatars/main/avatars/custom/zeke.png";
+    img.setAttribute('crossOrigin', 'Anonymous');  //ставим атрибуты CORS
+    img.onload = function () {   //функция размытия при загрузке
+        ctx.drawImage(img, 100, 100); //метод рисования объекта img в 100:100
+        var idata = ctx.getImageData(0, 0, 500, 1000);   //получаем координаты пикселей
+
+        var h = canvas.height;
+        var w = canvas.width / 2;
+
+        var idata1 = ctx.createImageData(w, h);  //создание img объекта с такими w и h
+        var pixels_column_count = 7;
+        var pixels_row_count = 7;
+
+        //цикл для медианного сглаживающего фильтра
+        for (var i = 0; i < h; i++) {
+            for (var j = 0; j < w; j++) {
+                const arrR = [];
+                const arrG = [];
+                const arrB = [];
+                const arrS = [];
+
+                for (var k = 0; k < pixels_column_count; k++) {
+                    for (var l = 0; l < pixels_row_count; l++) {
+                        arrR.push(idata.data[((i + l) * w + j + k) * 4]);
+                        arrG.push(idata.data[((i + l) * w + j + k) * 4 + 1]);
+                        arrB.push(idata.data[((i + l) * w + j + k) * 4 + 2]);
+                        arrS.push(idata.data[((i + l) * w + j + k) * 4 + 3]);
+                    }
+                }
+
+                arrR.sort();
+                arrG.sort();
+                arrB.sort();
+                arrS.sort();
+                var mid = Math.floor(arrR.length / 2);
+
+                for (var k = 0; k < pixels_column_count; k++) {
+                    for (var l = 0; l < pixels_row_count; l++) {
+                        idata1.data[((i + l) * w + j + k) * 4] = arrR[mid];
+                        idata1.data[((i + l) * w + j + k) * 4 + 1] = arrG[mid];
+                        idata1.data[((i + l) * w + j + k) * 4 + 2] = arrB[mid];
+                        idata1.data[((i + l) * w + j + k) * 4 + 3] = arrS[mid];
+                    }
+                }
+            }
+        }
+        ctx.putImageData(idata1, 500, 0); //рисование img объекта
+    };
+</script>
+</body>
+</html>
