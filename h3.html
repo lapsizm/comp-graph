@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>LAB3</title>
+</head>
+<body>
+<canvas id="canvas" width="1000" height="1000"></canvas>
+<script>
+
+const canvas = document.getElementById("canvas") //получаем контекст
+const context = canvas.getContext("2d")
+
+
+const width = canvas.width  // Размеры canvas
+const height = canvas.height
+
+x0 = width / 2 // Центр
+y0 = height / 2
+
+function Bresenham(x1, y1) {
+    let dx = x1 - x0
+    let dy = y1 - y0
+    let sign_x,sign_y
+
+    if (dx > 0){
+        sign_x = 1
+    }
+    if(dx < 0){
+        sign_x = -1
+        dx = -dx
+    }
+    if(dy === 0){
+        sign_y = 0
+    }
+        if (dy > 0){
+        sign_y = 1
+    }
+    if(dy < 0){
+        sign_y = -1
+        dy = -dy
+    }
+    if(dy === 0){
+        sign_y = 0
+    }
+
+    let pdx, pdy, es, el
+    if (dx - dy > 0) {
+        pdx = sign_x
+        pdy = 0
+        es = dy
+        el = dx
+    } else {
+        pdx = 0
+        pdy = sign_y
+        es = dx
+        el = dy
+    }
+
+    let x = x1
+    let y = y1
+    let error = el / 2
+    let count = 0
+
+    while (count < el) {
+        error -= es
+        if (error < 0) {
+            error += el
+            x += sign_x
+            y += sign_y
+        } else {
+            x += pdx
+            y += pdy
+        }
+        ++count
+        context.fillRect(x, y, 2, 2)
+    }
+}
+
+let range = 1
+
+function Draw() {
+    context.fillStyle = "#c20000"
+    let x1 = x0 + Math.cos(range * 3.14) * 200   //200 - размер стрелок
+    let y1 = y0 + Math.sin(range * 3.14) * 200
+    Bresenham(x1, y1)
+    range += 1/100
+    x1 = x0 + Math.cos(range * 3.14) * 200
+    y1 = y0 + Math.sin(range * 3.14) * 200
+    Bresenham(x1, y1)
+}
+setInterval(Draw, 100)
+
+</script>
+</body>
+</html>
